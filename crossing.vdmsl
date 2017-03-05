@@ -11,7 +11,8 @@ state Crossing of
   leftBank : Place
   rightBank : Place
   boatPos: Bank
-  inv cr == true -- invariant to be added here: replace true with your invariant 
+   -- Must ensure that there is no danger (Goat + Cabbage or Wolf + Goat) on either side of the river:
+  inv mk_Crossing(leftBank, rightBank, boatPos) == Danger(leftBank) = false and Danger(rightBank) = false
   init cr == cr = mk_Crossing({<Goat>,<Wolf>,<Cabbage>,<Farmer>},{},<Left>)
   end 
   
@@ -27,7 +28,11 @@ Place = set of Passenger;
 
 functions
 
--- add functions here
+Danger: Place -> bool
+Danger(bank) == 
+	<Wolf> in set bank and <Goat> in set bank and <Farmer> not in set bank or  -- Danger if Wolf and Goat left alone
+	<Goat> in set bank and <Cabbage> in set bank and <Farmer> not in set bank; -- or if Goat and Cabbage left alone
+
 	
 operations
 
@@ -42,7 +47,8 @@ Run: () ==> ()
 Run() ==
  ( 
   fopen();  -- reopen output file, overwriting current contents
-  
+  fprintln("Bank: " ^ toString(leftBank));
+  fprintln("Danger: " ^ toString(Danger(leftBank)));
   -- complete this operation by adding a sequence of steps to solve the puzzle
   -- solution can be found at
   -- https://illuminations.nctm.org/BrainTeasers.aspx?id=4992  
