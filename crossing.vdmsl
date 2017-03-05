@@ -37,11 +37,24 @@ Danger(bank) ==
 operations
 
 CrossRight: set of Passenger ==> ()  
-CrossRight(passengers) == is not yet specified;
+CrossRight(passengers) == (
+	leftBank := leftBank \ passengers;
+	boatPos := <Right>;
+	rightBank := rightBank union passengers;
+)
+-- Preconditions to ensure state invariant is not violated and ensures that boat is on the correct river bank.
+pre Danger(leftBank \ passengers) = false and Danger(rightBank union passengers) = false and boatPos = <Left> and
+<Farmer> in set passengers and card passengers > 0 and card passengers < 3; -- Also ensure farmer is present and we have 1 or 2 passengers.
 
 CrossLeft: set of Passenger ==> ()  
-CrossLeft(passengers) == is not yet specified;
-
+CrossLeft(passengers) == (
+	rightBank := rightBank \ passengers;
+	boatPos := <Left>;
+	leftBank := leftBank union passengers;
+)
+-- Preconditions to ensure state invariant is not violated and ensures that boat is on the correct river bank.
+pre Danger(rightBank \ passengers) = false and Danger(leftBank union passengers) = false and boatPos = <Right> and
+<Farmer> in set passengers and card passengers > 0 and card passengers < 3; -- Also ensure farmer is present and we have 1 or 2 passengers.
 
 Run: () ==> ()
 Run() ==
