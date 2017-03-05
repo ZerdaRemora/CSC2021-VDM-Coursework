@@ -33,6 +33,10 @@ Danger(bank) ==
 	<Wolf> in set bank and <Goat> in set bank and <Farmer> not in set bank or  -- Danger if Wolf and Goat left alone
 	<Goat> in set bank and <Cabbage> in set bank and <Farmer> not in set bank; -- or if Goat and Cabbage left alone
 
+ValidCrossing: set of Passenger * Place -> bool
+ValidCrossing(passengers, source) ==
+	<Farmer> in set passengers and card passengers > 0 and card passengers < 3 and -- Ensure farmer is present and there is only 1 or 2 passengers.
+	passengers subset source; -- Also ensure that the passengers are actually present at the source river bank.
 	
 operations
 
@@ -44,7 +48,7 @@ CrossRight(passengers) == (
 )
 -- Preconditions to ensure state invariant is not violated and ensures that boat is on the correct river bank.
 pre Danger(leftBank \ passengers) = false and Danger(rightBank union passengers) = false and boatPos = <Left> and
-<Farmer> in set passengers and card passengers > 0 and card passengers < 3; -- Also ensure farmer is present and we have 1 or 2 passengers.
+ValidCrossing(passengers, leftBank); -- Also ensure farmer is present and we have 1 or 2 passengers.
 
 CrossLeft: set of Passenger ==> ()  
 CrossLeft(passengers) == (
@@ -54,12 +58,29 @@ CrossLeft(passengers) == (
 )
 -- Preconditions to ensure state invariant is not violated and ensures that boat is on the correct river bank.
 pre Danger(rightBank \ passengers) = false and Danger(leftBank union passengers) = false and boatPos = <Right> and
-<Farmer> in set passengers and card passengers > 0 and card passengers < 3; -- Also ensure farmer is present and we have 1 or 2 passengers.
+ValidCrossing(passengers, rightBank); -- Also ensure farmer is present and we have 1 or 2 passengers.
 
 Run: () ==> ()
 Run() ==
  ( 
   fopen();  -- reopen output file, overwriting current contents
+
+--	fprintln("Failing solution start.");
+--	fprintln("Left Bank: " ^ toString(leftBank));
+--  fprintln("Right Bank: " ^ toString(rightBank));
+--  fprintln("BoatPos: " ^ toString(boatPos));
+--
+--	CrossRight({<Farmer>, <Goat>});
+--	fprintln("\nGoat + Farmer from Left to Right.");
+--	fprintln("Left Bank: " ^ toString(leftBank));
+--  fprintln("Right Bank: " ^ toString(rightBank));
+--  fprintln("BoatPos: " ^ toString(boatPos)); 
+--
+--	CrossLeft({<Farmer>, <Wolf>});
+--	fprintln("\nFarmer + Wolf from Right to Left.");
+--	fprintln("Left Bank: " ^ toString(leftBank));
+--  fprintln("Right Bank: " ^ toString(rightBank));
+--  fprintln("BoatPos: " ^ toString(boatPos));
 
   fprintln("Start.");
   fprintln("Left Bank: " ^ toString(leftBank));
@@ -109,6 +130,7 @@ Run() ==
   fprintln("BoatPos: " ^ toString(boatPos));
   
   fprintln("\nFinished.");
+
   -- complete this operation by adding a sequence of steps to solve the puzzle
   -- solution can be found at
   -- https://illuminations.nctm.org/BrainTeasers.aspx?id=4992  
