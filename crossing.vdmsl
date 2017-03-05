@@ -60,12 +60,59 @@ Run: () ==> ()
 Run() ==
  ( 
   fopen();  -- reopen output file, overwriting current contents
-  fprintln("Bank: " ^ toString(leftBank));
-  fprintln("Danger: " ^ toString(Danger(leftBank)));
+
+  fprintln("Start.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossRight({<Farmer>, <Goat>});
+  fprintln("\nGoat + Farmer from Left to Right.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossLeft({<Farmer>});
+  fprintln("\nFarmer from Right to Left.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossRight({<Farmer>, <Cabbage>});
+  fprintln("\nCabbage + Farmer from Left to Right.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossLeft({<Farmer>, <Goat>});
+  fprintln("\nGoat + Farmer from Right to Left.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossRight({<Farmer>, <Wolf>});
+  fprintln("\nWolf + Farmer from Left to Right.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossLeft({<Farmer>});
+  fprintln("\nFarmer from Right to Left.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  CrossRight({<Farmer>, <Goat>});
+  fprintln("\nGoat + Farmer from Left to Right.");
+  fprintln("Left Bank: " ^ toString(leftBank));
+  fprintln("Right Bank: " ^ toString(rightBank));
+  fprintln("BoatPos: " ^ toString(boatPos));
+  
+  fprintln("\nFinished.");
   -- complete this operation by adding a sequence of steps to solve the puzzle
   -- solution can be found at
   -- https://illuminations.nctm.org/BrainTeasers.aspx?id=4992  
-    );
+ );
     
     
     
