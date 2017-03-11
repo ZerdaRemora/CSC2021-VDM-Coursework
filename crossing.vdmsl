@@ -12,7 +12,8 @@ state Crossing of
   rightBank : Place
   boatPos: Bank
    -- Must ensure that there is no danger (Goat + Cabbage or Wolf + Goat) on either side of the river:
-  inv mk_Crossing(leftBank, rightBank, boatPos) == Danger(leftBank) = false and Danger(rightBank) = false
+  inv mk_Crossing(leftBank, rightBank, boatPos) == Danger(leftBank) = false and Danger(rightBank) = false and 
+  																								 OnlyOnOneBank(leftBank, rightBank) = true
   init cr == cr = mk_Crossing({<Goat>,<Wolf>,<Cabbage>,<Farmer>},{},<Left>)
   end 
   
@@ -30,8 +31,26 @@ functions
 
 Danger: Place -> bool
 Danger(bank) == 
-	<Wolf> in set bank and <Goat> in set bank and <Farmer> not in set bank or  -- Danger if Wolf and Goat left alone
-	<Goat> in set bank and <Cabbage> in set bank and <Farmer> not in set bank; -- or if Goat and Cabbage left alone
+	(<Wolf> in set bank and <Goat> in set bank and <Farmer> not in set bank) or  -- Danger if Wolf and Goat left alone
+	(<Goat> in set bank and <Cabbage> in set bank and <Farmer> not in set bank); -- or if Goat and Cabbage left alone
+
+--OnlyOnOneBank: Place * Place -> bool
+--OnlyOnOneBank(leftBank, rightBank) ==
+--	((<Farmer> in set leftBank and <Farmer> not in set rightBank) or (<Farmer> in set rightBank and <Farmer> not in set leftBank))
+--	and
+--	((<Goat> in set leftBank and <Goat> not in set rightBank) or (<Goat> in set rightBank and <Goat> not in set leftBank))
+--	and
+--	((<Wolf> in set leftBank and <Wolf> not in set rightBank) or (<Wolf> in set rightBank and <Wolf> not in set leftBank))
+--	and
+--	((<Cabbage> in set leftBank and <Cabbage> not in set rightBank) or (<Cabbage> in set rightBank and <Cabbage> not in set leftBank));
+
+-- Ensures each passenger can only be on one bank at a time.
+OnlyOnOneBank: Place * Place -> bool
+OnlyOnOneBank(leftBank, rightBank) ==
+	not (<Farmer> in set leftBank and <Farmer> in set rightBank) and
+	not (<Goat> in set leftBank and <Goat> in set rightBank) and
+	not (<Wolf> in set leftBank and <Wolf> in set rightBank) and
+	not (<Cabbage> in set leftBank and <Cabbage> in set rightBank);
 
 ValidCrossing: set of Passenger * Place -> bool
 ValidCrossing(passengers, source) ==
@@ -64,23 +83,6 @@ Run: () ==> ()
 Run() ==
  ( 
   fopen();  -- reopen output file, overwriting current contents
-
---	fprintln("Failing solution start.");
---	fprintln("Left Bank: " ^ toString(leftBank));
---  fprintln("Right Bank: " ^ toString(rightBank));
---  fprintln("BoatPos: " ^ toString(boatPos));
---
---	CrossRight({<Farmer>, <Goat>});
---	fprintln("\nGoat + Farmer from Left to Right.");
---	fprintln("Left Bank: " ^ toString(leftBank));
---  fprintln("Right Bank: " ^ toString(rightBank));
---  fprintln("BoatPos: " ^ toString(boatPos)); 
---
---	CrossLeft({<Farmer>, <Wolf>});
---	fprintln("\nFarmer + Wolf from Right to Left.");
---	fprintln("Left Bank: " ^ toString(leftBank));
---  fprintln("Right Bank: " ^ toString(rightBank));
---  fprintln("BoatPos: " ^ toString(boatPos));
 
   fprintln("Start.");
   fprintln("Left Bank: " ^ toString(leftBank));
@@ -130,10 +132,7 @@ Run() ==
   fprintln("BoatPos: " ^ toString(boatPos));
   
   fprintln("\nFinished.");
-
-  -- complete this operation by adding a sequence of steps to solve the puzzle
-  -- solution can be found at
-  -- https://illuminations.nctm.org/BrainTeasers.aspx?id=4992  
+  
  );
     
     
